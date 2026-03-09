@@ -26,7 +26,7 @@ app.use(cors());
 
 // --- Clerk Webhook Endpoint ---
 // Note: Webhooks need raw body, so we define this before express.json()
-app.post("/api/webhook/clerk", bodyParser.raw({ type: "application/json" }), async (req, res) => {
+app.post("/api/webhook/clerk", express.raw({ type: "application/json" }), async (req, res) => {
     const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
     if (!WEBHOOK_SECRET) {
