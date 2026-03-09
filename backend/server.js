@@ -66,16 +66,17 @@ app.post("/api/webhook/clerk", express.raw({ type: "application/json" }), async 
                 { clerkUserId: id },
                 {
                     clerkUserId: id,
-                    email: email_addresses[0].email_address,
-                    name: `${first_name} ${last_name}`,
+                    email: (email_addresses && email_addresses.length > 0) ? email_addresses[0].email_address : "",
+                    name: `${first_name || ""} ${last_name || ""}`.trim(),
                     imageUrl: image_url,
                 },
                 { upsert: true, new: true, setDefaultsOnInsert: true }
             );
             console.log(`User ${id} synced to database via webhook.`);
+            return res.status(200).json({ success: true });
         } catch (error) {
             console.error("Error syncing user to database:", error);
-            return res.status(500).json({ error: "Database sync failed" });
+            return res.status(500).json({ error: "Database sync failed", details: error.message });
         }
     }
 
@@ -83,8 +84,10 @@ app.post("/api/webhook/clerk", express.raw({ type: "application/json" }), async 
         try {
             await User.findOneAndDelete({ clerkUserId: id });
             console.log(`User ${id} deleted via webhook.`);
+            return res.status(200).json({ success: true });
         } catch (error) {
             console.error("Error deleting user from database:", error);
+            return res.status(500).json({ error: "Deletion failed" });
         }
     }
 
