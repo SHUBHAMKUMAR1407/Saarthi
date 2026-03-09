@@ -64,7 +64,7 @@ const HeroSection = () => {
               Get Started
             </Button>
           </Link>
-          <Link to="https:">
+          <Link to="https://youtube.com">
             <Button size="lg" variant="outline" className="px-8">
               Watch Demo
             </Button>
@@ -216,9 +216,11 @@ const HeroSection = () => {
             </div>
 
             <div className="relative z-10">
-              <Button className="w-full" size="lg">
-                Get Started
-              </Button>
+              <Link to="/dashboard">
+                <Button className="w-full" size="lg">
+                  Get Started
+                </Button>
+              </Link>
               <p className="text-xs text-center mt-4 text-muted-foreground">
                 Join 10,000+ professionals advancing their careers
               </p>
