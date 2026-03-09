@@ -59,6 +59,7 @@ app.post("/api/webhook/clerk", express.raw({ type: "application/json" }), async 
 
     const { id, email_addresses, first_name, last_name, image_url } = evt.data;
     const eventType = evt.type;
+    console.log(`Webhook received: ${eventType} for user ${id}`);
 
     if (eventType === "user.created" || eventType === "user.updated") {
         try {
