@@ -1,0 +1,28 @@
+# Root .gitignore for Saarthi AI
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment Variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Logs
+*.log
+server_start_err*.txt
+build_err.log
+
+# Build Outputs
+dist/
+build/
+.vercel/
+
+# Editor/System Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
