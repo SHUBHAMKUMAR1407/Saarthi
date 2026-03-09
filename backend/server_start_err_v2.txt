@@ -1,0 +1,28 @@
+﻿[dotenv@17.3.1] injecting env (2) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+node : Error connecting 
+to MongoDB: The `uri` 
+parameter to 
+`openUri()` must be a 
+string, got 
+"undefined". Make sure 
+the first parameter to 
+`mongoose.connect()` or 
+`mongoose.createConnecti
+on()` is a string.
+At line:1 char:17
++ $env:PORT=5001; node 
+server.js 2>&1 | 
+Out-File -FilePath 
+"server_star ...
++                 
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecifi    
+ed: (Error connect    
+in...)` is a strin    
+g.:String) [], Rem    
+oteException
+    + FullyQualifiedEr  
+  rorId : NativeComm    
+andError
+ 
