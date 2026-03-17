@@ -47,7 +47,9 @@ export default function Onboarding() {
     const onSubmit = async (values) => {
         try {
             setUpdateLoading(true);
-            const formattedIndustry = `${values.industry}-${values.subIndustry
+            
+            const subIndustry = values.subIndustry || "";
+            const formattedIndustry = `${values.industry}-${subIndustry
                 .toLowerCase()
                 .replace(/ /g, "-")}`;
 
@@ -55,30 +57,45 @@ export default function Onboarding() {
                 ...values,
                 industry: formattedIndustry,
             };
+            
+            console.log("Submitting onboarding payload:", payload);
+
 
             const res = await fetchWithAuth("/user/update", {
                 method: "POST",
                 body: JSON.stringify(payload),
             });
+            console.log("Onboarding API Response:", res);
 
-            if (res.success) {
-                toast.success("Profile completed successfully!");
-                navigate("/dashboard");
+            if (res && (res.success || res.user)) {
+                toast.success("Profile updated! Redirecting...");
+                navigate("/dashboard", { replace: true });
+            } else {
+                const errorMsg = res?.error || "Update failed. Server returned no error message.";
+                console.error("Update failed details:", res);
+                toast.error(errorMsg);
             }
+
         } catch (error) {
-            console.error("Onboarding error:", error);
-            toast.error(error.message || "Failed to complete onboarding");
+            console.error("Onboarding submission error:", error);
+            // If error has a response object with more info
+            const serverError = error.message || "Something went wrong during onboarding";
+            toast.error(serverError);
         } finally {
             setUpdateLoading(false);
         }
     };
 
+
+
+
+
     const watchIndustry = watch("industry");
 
     return (
-        <main>
-            <div className="flex items-center justify-center bg-background">
-                <Card className="w-full max-w-lg mt-10 mx-2">
+        <div className="flex items-center justify-center mt-10 md:mt-20 pb-10">
+            <Card className="w-full max-w-lg mx-2 transition-all hover:shadow-primary/5">
+
                     <CardHeader>
                         <CardTitle className="gradient-title text-4xl">
                             Complete Your Profile
@@ -208,7 +225,6 @@ export default function Onboarding() {
                         </form>
                     </CardContent>
                 </Card>
-            </div>
-        </main>
+        </div>
     );
 }

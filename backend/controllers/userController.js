@@ -4,61 +4,76 @@ import User from '../models/User.js';
 export const getUserOnboardingStatus = async (req, res) => {
     try {
         const { auth } = req;
-        console.log(`Checking onboarding status for user: ${auth.userId}`);
-        let user = await User.findOne({ clerkUserId: auth.userId });
+        if (!auth?.userId) return res.status(401).json({ error: "Session expired" });
 
-        if (user) {
-            console.log(`User ${auth.userId} found in MongoDB.`);
-        } else {
-            console.log(`User ${auth.userId} NOT found in MongoDB. Attempting auto-sync...`);
-            try {
-                if (!process.env.CLERK_SECRET_KEY) {
-                    console.error("CRITICAL: CLERK_SECRET_KEY is missing in backend environment!");
-                }
-                const clerkUser = await clerkClient.users.getUser(auth.userId);
-                console.log(`Successfully fetched user from Clerk: ${clerkUser.emailAddresses[0].email_address}`);
-
-                user = await User.create({
-                    clerkUserId: auth.userId,
-                    email: clerkUser.emailAddresses[0].email_address,
-                    name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim(),
-                    imageUrl: clerkUser.imageUrl,
-                });
-                console.log(`Successfully auto-synced user to MongoDB: ${auth.userId}`);
-            } catch (clerkError) {
-                console.error('Error during auto-sync from Clerk:', clerkError.message);
-                // Return a specific error so we can see it in Render logs
-                return res.status(500).json({
-                    error: 'Auto-sync failed',
-                    message: clerkError.message,
-                    hint: "Check CLERK_SECRET_KEY on Render"
-                });
-            }
-        }
-
-        const isOnboarded = !!(user.industry && user.experience);
-        console.log(`Onboarding status for ${auth.userId}: ${isOnboarded}`);
+        const user = await User.findOne({ clerkUserId: auth.userId });
+        
+        // Strictly check if both industry and experience exist
+        const isOnboarded = !!(user && user.industry && typeof user.experience === 'number');
         res.json({ isOnboarded });
     } catch (error) {
-        console.error('Error in getUserOnboardingStatus:', error);
-        res.status(500).json({ error: 'Internal server error', details: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
 export const updateUser = async (req, res) => {
     try {
         const { auth } = req;
+        if (!auth?.userId) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
         const { industry, experience, bio, skills } = req.body;
+        console.log(`Updating profile for user: ${auth.userId}`);
 
-        const updatedUser = await User.findOneAndUpdate(
-            { clerkUserId: auth.userId },
-            { industry, experience, bio, skills },
-            { new: true, upsert: true }
-        );
+        // 1. Try to find existing user
+        let user = await User.findOne({ clerkUserId: auth.userId });
 
-        res.json(updatedUser);
+        // 2. If not found, create one with basic info from Clerk
+        if (!user) {
+            console.log(`User ${auth.userId} not found, syncing from Clerk...`);
+            const clerkUser = await clerkClient.users.getUser(auth.userId);
+            const email = clerkUser.emailAddresses[0]?.email_address;
+            
+            if (!email) {
+                return res.status(400).json({ error: "Clerk email missing" });
+            }
+
+            user = new User({
+                clerkUserId: auth.userId,
+                email,
+                name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim(),
+                imageUrl: clerkUser.imageUrl,
+            });
+        }
+
+        // 3. Update the fields
+        user.industry = industry;
+        user.experience = Number(experience) || 0;
+        user.bio = bio || "";
+        user.skills = Array.isArray(skills) ? skills : [];
+
+        // 4. Save
+        const savedUser = await user.save();
+        console.log(`Profile saved successfully for ${auth.userId}`);
+
+        return res.status(200).json({ 
+            success: true, 
+            user: savedUser 
+        });
     } catch (error) {
-        console.error('Error updating user:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Profile Update Failed:", error);
+        return res.status(500).json({ 
+            success: false, 
+            error: error.message || "Failed to save profile. Please check all fields." 
+        });
     }
 };
+
+
+
+
+
+
+
+
