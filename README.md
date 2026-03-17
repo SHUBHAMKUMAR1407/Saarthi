@@ -1,11 +1,11 @@
-# Saarthi AI: Your Ultimate Career Charioteer 🏹 🤖
+# Saarthi: Your Ultimate Career Charioteer 🏹 🤖
 
 [![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://saarthi-pc0q.onrender.com)
 [![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 
-**Saarthi AI** is a state-of-the-art career assistance platform designed to empower professionals and job seekers. Leveraging the power of **Google Gemini AI**, it provides intelligent solutions for resume building, cover letter generation, and real-time industry insights.
+**Saarthi** is a state-of-the-art career assistance platform designed to empower professionals and job seekers. Leveraging the power of **Google Gemini AI**, it provides intelligent solutions for resume building, cover letter generation, and real-time industry insights.
 
 ---
 

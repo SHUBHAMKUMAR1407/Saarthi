@@ -23,8 +23,9 @@ export default function Header() {
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center">
           <div className="font-sans text-2xl font-extrabold tracking-tighter">
-            <span className="font-sans">SAARTHI</span>{" "}
-            <span className="bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 bg-clip-text text-transparent font-mono uppercase tracking-wider">AI</span>
+            <span className="font-sans">
+              SA<span className="text-sky-400">A</span>RTH<span className="text-sky-400">I</span>
+            </span>
           </div>
         </Link>
 
