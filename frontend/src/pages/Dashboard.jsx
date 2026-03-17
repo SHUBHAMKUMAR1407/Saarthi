@@ -59,7 +59,7 @@ export default function Dashboard() {
 
             const url = industry ? `/dashboard/insights?industry=${industry}` : "/dashboard/insights";
             const res = await fetchWithAuth(url);
-            
+
             if (res.insights) {
                 setInsights(res.insights);
                 // Also set the selected industry if it came from profile
@@ -87,7 +87,7 @@ export default function Dashboard() {
 
     if (loading && !insights) {
         return (
-            <div className="px-5 container mx-auto mt-10">
+            <div className="px-5 container mx-auto mt-24">
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <h1 className="text-6xl font-bold gradient-title">Industry Insights</h1>
                 </div>
@@ -159,7 +159,7 @@ export default function Dashboard() {
 
     return (
         <div className="px-5 container mx-auto mb-10">
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 mt-10 gap-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 mt-24 gap-4">
                 <h1 className="text-6xl font-bold gradient-title">Industry Insights</h1>
                 <div className="flex items-center gap-3">
                     <Select value={selectedIndustry} onValueChange={handleIndustryChange}>
@@ -174,9 +174,9 @@ export default function Dashboard() {
                             ))}
                         </SelectContent>
                     </Select>
-                    <Button 
-                        variant="ghost" 
-                        size="icon" 
+                    <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => fetchInsights(selectedIndustry)}
                         className={`transition-all ${loading ? "animate-spin" : ""}`}
                     >
@@ -190,8 +190,8 @@ export default function Dashboard() {
                     <div className="flex items-center gap-2">
                         <Badge variant="outline" className="px-3 py-1 bg-background">
                             Sector: <span className="text-primary ml-1 capitalize font-semibold tracking-wide">
-                                {selectedIndustry ? 
-                                    industries.find(i => i.id === selectedIndustry)?.name || selectedIndustry : 
+                                {selectedIndustry ?
+                                    industries.find(i => i.id === selectedIndustry)?.name || selectedIndustry :
                                     "Your Profile Industry"}
                             </span>
                         </Badge>
